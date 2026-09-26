@@ -15,8 +15,8 @@ We're a student rocketry association from Anand, Gujarat, building towards 100 k
 ```
 avionics/
 ├── missions/
-│   ├── M001-HomiSII/          # Firmware and configs as flown in Mission 001
-│   ├── M002/
+│   ├── M003-HomiSII/          # Firmware and configs as flown in Mission 001
+│   ├── M004/
 │   └── ...
 └── resources/
     ├── wiring-diagrams/      # Annotated schematics for each hardware config
