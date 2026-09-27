@@ -35,9 +35,9 @@ passed an indoor stair test. Not flight-ready.
 **Power**
 
 Two LiPo cells in series (2S, 7.4 V nominal) feed an adjustable buck converter
-set to 5 V. The ESP32-CAM and the servo are in parallel on its output. A
-1000 µF capacitor sits directly across the buck converter's output terminals,
-so a servo stall doesn't brown out the ESP32.
+set to 5 V. A 1000 µF capacitor sits directly across its OUT+/OUT−, and from
+there the output branches in parallel to the ESP32-CAM (5V/GND) and the servo.
+The capacitor helps stop a servo stall from browning out the ESP32.
 
 **MG90S servo**
 
