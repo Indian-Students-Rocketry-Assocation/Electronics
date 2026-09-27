@@ -14,16 +14,23 @@ We're the Indian Students Rocketry Association, a student rocketry association f
 
 | Mission | Rocket | Status | What's there |
 |---|---|---|---|
+| [M001](Missions/M001-SRM/) | SRM | Flew 2024-10-20. Motor exploded on ignition | Parts list only: Arduino Nano, ADXL345, BME280, nRF24L01+ telemetry |
+| [M002](Missions/M002-HomiSI/) | Homi Shatam I | Flew 2025-03-11. Motor exploded within 1 s | Parts list only: Arduino Nano, MPU6050, BMP180, SD logging |
 | [M003](Missions/M003-HomiSII/) | Homi Shatam II | In development, not yet flown | ESP32-CAM + GY-87 flight computer with Kalman-filtered apogee detection and servo parachute deploy, a desktop flight simulator, bench-test logs |
 | [M004](Missions/M004-UnityKM/) | UnityKM | Not started | — |
 
+No code or data survives from M001 and M002. Both boards were destroyed and nothing was committed at the time. Their READMEs were written afterwards from memory.
+
 ```
 Missions/
-└── M003-HomiSII/
-    ├── README.md          # State, test results, known issues — start here
-    ├── FlightComputer/    # Firmware, wiring, circuit diagram, build settings
-    ├── FlightSim/         # Runs the flight logic against simulated flights
-    └── Test/              # Logs from board tests, one folder per test
+├── M001-SRM/              # README only
+├── M002-HomiSI/           # README only
+├── M003-HomiSII/
+│   ├── README.md          # State, test results, known issues — start here
+│   ├── FlightComputer/    # Firmware, wiring, circuit diagram, build settings
+│   ├── FlightSim/         # Runs the flight logic against simulated flights
+│   └── Test/              # Logs from board tests, one folder per test (YYYY-MM-DD_Name)
+└── M004-UnityKM/          # Placeholder
 ```
 
 Each mission folder is self-contained, and its `README.md` says honestly what works and what hasn't been tested yet.
