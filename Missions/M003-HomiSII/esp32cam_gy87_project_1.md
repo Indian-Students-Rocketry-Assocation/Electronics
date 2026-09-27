@@ -11,7 +11,7 @@ Project status as of 26 September 2026.
 | SD card (16 GB, FAT32, 1-bit mode) | ✅ Works. Fixed by setting CPU Frequency to 240 MHz |
 | GY-87: MPU6050 accelerometer + BMP180 barometer | ✅ Both detected |
 | Full logger: photo every 1 s, sensors every 0.5 s, saved to SD | ✅ Works end-to-end |
-| MG90S servo | 🔌 Wiring defined, **no servo code yet**. The sketch holds GPIO4 LOW, so the servo stays idle |
+| MG90S servo | 🧪 Driven by `FlightComputer/` (apogee deploy + Wi-Fi pre-launch page). Compiles, not yet run on the board. `Logger.ino` still holds GPIO4 LOW |
 
 ## What it does
 
