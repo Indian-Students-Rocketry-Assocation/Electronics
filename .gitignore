@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Build output
+build/
+*.o
+*.bin
+*.elf
+Missions/*/FlightSim/flight_sim
+
+# Python
+__pycache__/
+venv/
+.venv/
+
+# Secrets
+.env
+secrets.h
