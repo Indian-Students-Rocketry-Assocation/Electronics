@@ -32,26 +32,33 @@ passed an indoor stair test. Not flight-ready.
 | VCC_IN | not connected | Would put 5 V on the I2C pull-ups |
 | INTA, DRDY | not connected | Sensors are polled, not interrupt-driven |
 
+**Power**
+
+Two LiPo cells in series (2S, 7.4 V nominal) feed an adjustable buck converter
+set to 5 V. The ESP32-CAM and the servo are in parallel on its output. A
+1000 µF capacitor sits directly across the buck converter's output terminals,
+so a servo stall doesn't brown out the ESP32.
+
 **MG90S servo**
 
 | Servo wire | Connects to | Notes |
 |---|---|---|
-| Red (+) | **5 V** supply + | Not from the ESP32-CAM's pins or the Uno |
-| Brown (GND) | Supply GND **and** ESP32-CAM GND | Grounds must be joined or the servo can't read the signal |
+| Red (+) | Buck converter **5 V** out | In parallel with the ESP32-CAM's 5V. Not from the ESP32-CAM's pins or the Uno |
+| Brown (GND) | Buck converter GND out **and** ESP32-CAM GND | Grounds must be joined or the servo can't read the signal |
 | Orange (signal) | **GPIO4** | 3.3 V logic is enough for the MG90S |
 
 **Arduino Uno as USB-to-serial programmer**
 
 | Uno | Connects to | Notes |
 |---|---|---|
-| 5V | ESP32-CAM **5V** | Bench only. Use a 5 V / 2 A supply for real runs |
+| 5V | ESP32-CAM **5V** | Bench only. Use the buck converter for real runs |
 | GND | ESP32-CAM **GND** | |
-| D0 (RX) | ESP32-CAM **U0R** | Through a divider: 1 kΩ in series, 3.3 kΩ from U0R to GND (the Uno is 5 V) |
+| D0 (RX) | ESP32-CAM **U0R** | Direct |
 | D1 (TX) | ESP32-CAM **U0T** | Direct |
 | RESET | Uno **GND** | Holds the Uno's own chip in reset so it just passes data through |
-| — | ESP32-CAM **IO0 → GND** | **Only while uploading.** Remove it and press reset to run |
+| — | ESP32-CAM **GPIO0 (IO0) → GND** | **Only while uploading.** Remove it and press reset to run |
 
-All grounds are joined: Uno, ESP32-CAM, GY-87 (GND and FSYNC) and the servo supply.
+All grounds are joined: Uno, ESP32-CAM, GY-87 (GND and FSYNC), servo and buck converter.
 
 ### Pin map
 
@@ -78,7 +85,7 @@ MPU6050, 0x77 BMP180, 0x1E HMC5883L), e.g. a PCA9685 servo board at 0x40.
 | PSRAM | Enabled (if shown) |
 | Upload speed / serial monitor | 115200 |
 
-To upload: connect IO0 to GND, press reset, click Upload, then remove the IO0
+To upload: connect GPIO0 (IO0) to GND, press reset, click Upload, then remove the IO0
 wire and press reset again.
 
 ### Problems we hit
@@ -88,7 +95,7 @@ wire and press reset again.
 | Board won't start with the GY-87 connected | GPIO12 is a strapping pin. The GY-87's SCL pull-up holds it high, which selects 1.8 V flash | Burn the flash-voltage eFuse once: `espefuse --port COMx set-flash-voltage 3.3V` (`pip install esptool`). Permanent, safe on AI-Thinker boards |
 | `sdmmc_host_reset returned 0x107` / SD mount fails | CPU below 240 MHz, or LEDC started before the SD host | 240 MHz, and start the SD card before the camera (the firmware does) |
 | Compile clash with the Adafruit sensor libraries | `Adafruit_Sensor.h` and `esp_camera.h` both define `sensor_t` | The firmware has its own MPU6050 and BMP180 drivers |
-| Random `POWERON_RESET` at start-up | Supply dips when powered through the Uno's 5V pin | Use a separate 5 V / 2 A supply |
+| Random `POWERON_RESET` at start-up | Supply dips when powered through the Uno's 5V pin | Power from the buck converter |
 
 ## How velocity is estimated
 
@@ -152,9 +159,9 @@ count as a normal boot.
 
 ## Before flying
 
-1. **Power.** The servo and ESP32 share 5 V. Put a 470–1000 µF capacitor across
-   the servo supply, close to the servo, so a servo stall doesn't brown out the
-   ESP32. The code survives a reset, but it is better not to have one.
+1. **Power.** The servo and ESP32 share the buck converter's 5 V. Check the
+   buck is set to 5 V before connecting the board, and that the 1000 µF
+   capacitor is on its output.
 2. **Flash LED.** It shares GPIO4 and glows with the servo pulses. Cover it.
 3. **Servo angles.** On the page, set lock and release so that **Lock** holds
    the mechanism and **Release** ejects it. Pulse range: `SERVO_MIN_US` /

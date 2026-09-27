@@ -4,7 +4,8 @@ Avionics for HOMIS-II: an ESP32-CAM with a GY-87 (MPU6050 accel/gyro + BMP180
 barometer) and an MG90S servo. The board logs data and photos to SD, works out
 altitude and vertical velocity, and turns the servo 90° at apogee to eject the
 parachute. Before launch, a Wi-Fi page shows sensor health and is used to arm it.
-The servo and ESP32 share one 5 V supply.
+Power is a 2S LiPo (7.4 V) through an adjustable buck converter set to 5 V; the
+servo and ESP32 are in parallel on its output, with 1000 µF across it.
 
 | Folder | What |
 |---|---|
@@ -58,8 +59,8 @@ To plot a log: `python3 Test/plot_flight.py <flight.csv> <out.png>` (needs matpl
 ## Next steps
 
 1. Fix issues 1 and 3.
-2. **Servo:** find the lock and release angles with the real mechanism. Add a
-   470–1000 µF capacitor on the servo 5 V, and cover the flash LED.
+2. **Servo:** find the lock and release angles with the real mechanism, and
+   cover the flash LED.
 3. **Put HOMIS-II in the simulator** (mass, thrust curve, Cd, rail from
    OpenRocket). Set the thresholds and the backup timer from it.
 4. **Bench tests** ([list](FlightComputer/README.md#before-flying)): swing test
