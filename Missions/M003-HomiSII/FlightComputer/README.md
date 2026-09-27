@@ -2,11 +2,10 @@
 
 ESP32-CAM + GY-87 + MG90S. Estimates altitude and vertical velocity, detects
 apogee and turns the servo from **lock** to **release** to eject the parachute.
-Built on [`../Logger/Logger.ino`](../Logger/Logger.ino): same wiring, same
-Arduino IDE settings, no extra libraries.
+No extra libraries.
 
-**Status (2026-09-26):** compiles (esp32 core 3.3.12) and passes the desktop
-simulator. **Not yet run on the board.** Do the bench tests below before any flight.
+**Status:** see [`../README.md`](../README.md). It runs on the board and has
+passed an indoor stair test. Not flight-ready.
 
 ## Files
 
@@ -16,6 +15,78 @@ simulator. **Not yet run on the board.** Do the bench tests below before any fli
 | `FlightLogic.h` | Estimator + state machine. Plain C++, no hardware |
 | `WebPage.h` | Pre-launch page |
 | `../FlightSim/flight_sim.cpp` | Runs `FlightLogic.h` against simulated flights |
+
+## Wiring
+
+**GY-87 → ESP32-CAM**
+
+| GY-87 pin | Connects to | Notes |
+|---|---|---|
+| 3.3V | **3V3** | |
+| GND | **GND** | |
+| SDA | **GPIO13** | |
+| SCL | **GPIO12** | Needs the eFuse fix below |
+| FSYNC | **GND** | The MPU6050 datasheet says to ground it when unused |
+| VCC_IN | not connected | Would put 5 V on the I2C pull-ups |
+| INTA, DRDY | not connected | Sensors are polled, not interrupt-driven |
+
+**MG90S servo**
+
+| Servo wire | Connects to | Notes |
+|---|---|---|
+| Red (+) | **5 V** supply + | Not from the ESP32-CAM's pins or the Uno |
+| Brown (GND) | Supply GND **and** ESP32-CAM GND | Grounds must be joined or the servo can't read the signal |
+| Orange (signal) | **GPIO4** | 3.3 V logic is enough for the MG90S |
+
+**Arduino Uno as USB-to-serial programmer**
+
+| Uno | Connects to | Notes |
+|---|---|---|
+| 5V | ESP32-CAM **5V** | Bench only. Use a 5 V / 2 A supply for real runs |
+| GND | ESP32-CAM **GND** | |
+| D0 (RX) | ESP32-CAM **U0R** | Through a divider: 1 kΩ in series, 3.3 kΩ from U0R to GND (the Uno is 5 V) |
+| D1 (TX) | ESP32-CAM **U0T** | Direct |
+| RESET | Uno **GND** | Holds the Uno's own chip in reset so it just passes data through |
+| — | ESP32-CAM **IO0 → GND** | **Only while uploading.** Remove it and press reset to run |
+
+All grounds are joined: Uno, ESP32-CAM, GY-87 (GND and FSYNC) and the servo supply.
+
+### Pin map
+
+| GPIO | Used by |
+|---|---|
+| 0, 5, 18, 19, 21, 22, 23, 25, 26, 27, 32, 34, 35, 36, 39 | Camera (on the board). Its control bus is on 26/27, I2C port 1 |
+| 16 | PSRAM (on the board). Never use |
+| 2, 14, 15 | microSD, 1-bit mode |
+| 13 / 12 | GY-87 SDA / SCL (I2C port 0) |
+| 4 | Flash LED **and** servo signal (LEDC timer 1; the camera clock owns timer 0) |
+| 1, 3 | Serial (upload and monitor) |
+
+No spare pins are left. Anything else has to go on the I2C bus (in use: 0x68
+MPU6050, 0x77 BMP180, 0x1E HMC5883L), e.g. a PCA9685 servo board at 0x40.
+
+## Building and uploading
+
+| Arduino IDE setting | Value |
+|---|---|
+| Board package | esp32 by Espressif (3.x) |
+| Board | AI Thinker ESP32-CAM |
+| **CPU Frequency** | **240 MHz** (lower makes the SD card fail with `0x107`) |
+| Partition scheme | Huge APP (3MB No OTA) |
+| PSRAM | Enabled (if shown) |
+| Upload speed / serial monitor | 115200 |
+
+To upload: connect IO0 to GND, press reset, click Upload, then remove the IO0
+wire and press reset again.
+
+### Problems we hit
+
+| Problem | Cause | Fix |
+|---|---|---|
+| Board won't start with the GY-87 connected | GPIO12 is a strapping pin. The GY-87's SCL pull-up holds it high, which selects 1.8 V flash | Burn the flash-voltage eFuse once: `espefuse --port COMx set-flash-voltage 3.3V` (`pip install esptool`). Permanent, safe on AI-Thinker boards |
+| `sdmmc_host_reset returned 0x107` / SD mount fails | CPU below 240 MHz, or LEDC started before the SD host | 240 MHz, and start the SD card before the camera (the firmware does) |
+| Compile clash with the Adafruit sensor libraries | `Adafruit_Sensor.h` and `esp_camera.h` both define `sensor_t` | The firmware has its own MPU6050 and BMP180 drivers |
+| Random `POWERON_RESET` at start-up | Supply dips when powered through the Uno's 5V pin | Use a separate 5 V / 2 A supply |
 
 ## How velocity is estimated
 

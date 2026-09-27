@@ -1,7 +1,7 @@
 /*
   HOMIS-II flight computer - ESP32-CAM (AI-Thinker) + GY-87 + MG90S
   ------------------------------------------------------------------
-  Built on Logger/Logger.ino (same wiring, same SD/camera setup). Adds:
+  Grew out of the earlier logger sketch (same wiring, same SD/camera setup). Adds:
     - 100 Hz IMU (MPU6050) + 50 Hz barometer (BMP180), non-blocking
     - Kalman-filtered altitude and vertical velocity (FlightLogic.h)
     - Apogee detection -> MG90S turns lock -> release (parachute out)
@@ -16,7 +16,7 @@
   Wi-Fi: join AP_SSID / AP_PASS, open http://192.168.4.1
   Wi-Fi switches off at launch and back on after landing.
 
-  Wiring: unchanged from Logger (see ../esp32cam_gy87_project_1.md).
+  Wiring, pin map and upload steps: README.md in this folder.
     GY-87 SDA -> GPIO13, SCL -> GPIO12, MG90S signal -> GPIO4.
     Cover the flash LED: it shares GPIO4 and glows with the servo pulses.
 
