@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="760" viewBox="0 0 1120 760" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <g id="gnd" stroke="#111" stroke-width="2">
+      <line x1="-10" y1="0" x2="10" y2="0"/>
+      <line x1="-6" y1="5" x2="6" y2="5"/>
+      <line x1="-2" y1="10" x2="2" y2="10"/>
+    </g>
+  </defs>
+  <rect width="1120" height="760" fill="#ffffff"/>
+
+  <text x="40" y="40" font-size="20" font-weight="bold" fill="#111">HOMIS-II flight computer — wiring</text>
+  <text x="40" y="62" font-size="13" fill="#555">ESP32-CAM + GY-87 + MG90S. Matches the tables in README.md.</text>
+
+  <!-- ============ wires (drawn first, boxes on top) ============ -->
+  <g fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- GY-87 to ESP32-CAM -->
+    <line x1="260" y1="190" x2="430" y2="190" stroke="#d97706"/>
+    <line x1="260" y1="240" x2="430" y2="240" stroke="#111"/>
+    <line x1="260" y1="290" x2="430" y2="290" stroke="#2563eb"/>
+    <line x1="260" y1="340" x2="430" y2="340" stroke="#16a34a"/>
+    <polyline points="260,390 330,390 330,240" stroke="#111"/>
+    <!-- not connected stubs -->
+    <line x1="260" y1="430" x2="282" y2="430" stroke="#aaa"/>
+    <line x1="260" y1="460" x2="282" y2="460" stroke="#aaa"/>
+    <line x1="260" y1="490" x2="282" y2="490" stroke="#aaa"/>
+
+    <!-- servo signal -->
+    <polyline points="630,190 890,190 890,150" stroke="#ea580c"/>
+    <!-- servo power from the supply -->
+    <line x1="950" y1="150" x2="950" y2="240" stroke="#dc2626"/>
+    <line x1="1010" y1="150" x2="1010" y2="240" stroke="#111"/>
+    <!-- ESP32-CAM power from the supply -->
+    <line x1="630" y1="270" x2="860" y2="270" stroke="#dc2626"/>
+    <line x1="630" y1="320" x2="860" y2="320" stroke="#111"/>
+
+    <!-- serial to the Uno -->
+    <line x1="630" y1="410" x2="860" y2="410" stroke="#7c3aed"/>
+    <line x1="630" y1="460" x2="740" y2="460" stroke="#7c3aed"/>
+    <line x1="800" y1="460" x2="860" y2="460" stroke="#7c3aed"/>
+    <line x1="700" y1="460" x2="700" y2="475" stroke="#7c3aed"/>
+    <line x1="700" y1="525" x2="700" y2="540" stroke="#111"/>
+    <polyline points="860,530 830,530 830,545" stroke="#111"/>
+
+    <!-- IO0 upload jumper -->
+    <line x1="530" y1="560" x2="530" y2="584" stroke="#111"/>
+    <line x1="530" y1="616" x2="530" y2="630" stroke="#111"/>
+  </g>
+
+  <!-- junctions -->
+  <g fill="#111">
+    <circle cx="330" cy="240" r="4"/>
+    <circle cx="700" cy="460" r="4" fill="#7c3aed"/>
+  </g>
+
+  <!-- ground symbols -->
+  <use href="#gnd" x="700" y="540"/>
+  <use href="#gnd" x="830" y="545"/>
+  <use href="#gnd" x="530" y="630"/>
+
+  <!-- resistors -->
+  <g fill="#fff" stroke="#111" stroke-width="2">
+    <rect x="740" y="453" width="60" height="14"/>
+    <rect x="693" y="475" width="14" height="50"/>
+  </g>
+  <text x="770" y="445" text-anchor="middle" fill="#111">1 kΩ</text>
+  <text x="714" y="505" fill="#111">3.3 kΩ</text>
+
+  <!-- IO0 jumper contacts -->
+  <g fill="#fff" stroke="#111" stroke-width="2">
+    <circle cx="530" cy="588" r="4"/>
+    <circle cx="530" cy="612" r="4"/>
+  </g>
+  <line x1="530" y1="592" x2="530" y2="608" stroke="#111" stroke-width="2" stroke-dasharray="3 3"/>
+  <text x="545" y="596" font-size="12" fill="#111">IO0 → GND jumper</text>
+  <text x="545" y="612" font-size="12" fill="#555">only while uploading</text>
+
+  <!-- planned servo capacitor -->
+  <g stroke="#555" stroke-width="2" stroke-dasharray="4 3">
+    <line x1="950" y1="200" x2="976" y2="200"/>
+    <line x1="984" y1="200" x2="1010" y2="200"/>
+  </g>
+  <g stroke="#555" stroke-width="2.5">
+    <line x1="976" y1="188" x2="976" y2="212"/>
+    <line x1="984" y1="188" x2="984" y2="212"/>
+  </g>
+  <text x="1018" y="198" font-size="11" fill="#555">470–1000 µF</text>
+  <text x="1018" y="212" font-size="11" fill="#555">planned, not fitted</text>
+
+  <!-- ============ boxes ============ -->
+  <g fill="#f5f5f4" stroke="#111" stroke-width="2">
+    <rect x="90" y="150" width="170" height="360" rx="6"/>
+    <rect x="430" y="150" width="200" height="410" rx="6"/>
+    <rect x="860" y="80" width="180" height="70" rx="6"/>
+    <rect x="860" y="240" width="180" height="100" rx="6"/>
+    <rect x="860" y="380" width="180" height="190" rx="6"/>
+  </g>
+  <rect x="668" y="368" width="427" height="275" rx="8" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="1085" y="636" text-anchor="end" font-size="12" fill="#7c3aed">Programming / serial monitor only (bench)</text>
+
+  <!-- GY-87 -->
+  <text x="175" y="138" text-anchor="middle" font-weight="bold" fill="#111">GY-87</text>
+  <text x="175" y="530" text-anchor="middle" font-size="11" fill="#555">MPU6050 · BMP180 · HMC5883L</text>
+  <g text-anchor="end" fill="#111">
+    <text x="250" y="194">3.3V</text>
+    <text x="250" y="244">GND</text>
+    <text x="250" y="294">SDA</text>
+    <text x="250" y="344">SCL</text>
+    <text x="250" y="394">FSYNC</text>
+    <text x="250" y="434" fill="#888">VCC_IN</text>
+    <text x="250" y="464" fill="#888">INTA</text>
+    <text x="250" y="494" fill="#888">DRDY</text>
+  </g>
+  <g font-size="11" fill="#888">
+    <text x="288" y="434">NC</text>
+    <text x="288" y="464">NC</text>
+    <text x="288" y="494">NC</text>
+  </g>
+
+  <!-- ESP32-CAM -->
+  <text x="530" y="138" text-anchor="middle" font-weight="bold" fill="#111">ESP32-CAM (AI-Thinker)</text>
+  <g fill="#111">
+    <text x="440" y="194">3V3</text>
+    <text x="440" y="244">GND</text>
+    <text x="440" y="294">GPIO13</text>
+    <text x="440" y="344">GPIO12</text>
+  </g>
+  <g text-anchor="end" fill="#111">
+    <text x="620" y="194">GPIO4</text>
+    <text x="620" y="274">5V</text>
+    <text x="620" y="324">GND</text>
+    <text x="620" y="414">U0T</text>
+    <text x="620" y="464">U0R</text>
+  </g>
+  <text x="530" y="552" text-anchor="middle" fill="#111">IO0</text>
+  <g text-anchor="middle" font-size="11" fill="#555">
+    <text x="530" y="484">Camera, microSD</text>
+    <text x="530" y="498">(GPIO 2/14/15) and</text>
+    <text x="530" y="512">PSRAM are on-board</text>
+  </g>
+
+  <!-- MG90S -->
+  <text x="950" y="104" text-anchor="middle" font-weight="bold" fill="#111">MG90S servo</text>
+  <g text-anchor="middle" font-size="12" fill="#111">
+    <text x="890" y="142">SIG</text>
+    <text x="950" y="142">+</text>
+    <text x="1010" y="142">GND</text>
+  </g>
+
+  <!-- supply -->
+  <g text-anchor="middle" font-size="12" fill="#111">
+    <text x="950" y="258">+</text>
+    <text x="1010" y="258">−</text>
+  </g>
+  <g font-size="12" fill="#111">
+    <text x="868" y="274">+</text>
+    <text x="868" y="324">−</text>
+  </g>
+  <text x="955" y="302" text-anchor="middle" font-weight="bold" fill="#111">5 V / 2 A supply</text>
+
+  <!-- Uno -->
+  <text x="985" y="404" text-anchor="middle" font-weight="bold" fill="#111">Arduino Uno</text>
+  <text x="985" y="420" text-anchor="middle" font-size="11" fill="#555">as USB-serial</text>
+  <g fill="#111">
+    <text x="868" y="414">D1 (TX)</text>
+    <text x="868" y="464">D0 (RX)</text>
+    <text x="868" y="534">GND</text>
+  </g>
+  <text x="985" y="495" text-anchor="middle" font-size="11" fill="#555">RESET tied to GND</text>
+
+  <!-- ============ legend ============ -->
+  <g font-size="12" fill="#111">
+    <line x1="90" y1="676" x2="118" y2="676" stroke="#d97706" stroke-width="3"/><text x="124" y="680">3.3 V</text>
+    <line x1="180" y1="676" x2="208" y2="676" stroke="#dc2626" stroke-width="3"/><text x="214" y="680">5 V</text>
+    <line x1="260" y1="676" x2="288" y2="676" stroke="#111" stroke-width="3"/><text x="294" y="680">GND</text>
+    <line x1="350" y1="676" x2="378" y2="676" stroke="#2563eb" stroke-width="3"/><text x="384" y="680">I2C SDA</text>
+    <line x1="460" y1="676" x2="488" y2="676" stroke="#16a34a" stroke-width="3"/><text x="494" y="680">I2C SCL</text>
+    <line x1="570" y1="676" x2="598" y2="676" stroke="#ea580c" stroke-width="3"/><text x="604" y="680">Servo signal</text>
+    <line x1="700" y1="676" x2="728" y2="676" stroke="#7c3aed" stroke-width="3"/><text x="734" y="680">Serial</text>
+  </g>
+  <g font-size="12" fill="#555">
+    <text x="90" y="708">All grounds (including every ⏚ symbol) are one common ground. GPIO12 needs the flash-voltage eFuse burned to 3.3 V.</text>
+    <text x="90" y="726">GPIO4 also drives the on-board flash LED: cover it. Power the board from the 5 V supply for real runs; the Uno's 5V pin is bench only.</text>
+  </g>
+</svg>

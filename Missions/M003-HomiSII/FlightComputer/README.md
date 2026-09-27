@@ -18,6 +18,8 @@ passed an indoor stair test. Not flight-ready.
 
 ## Wiring
 
+![HOMIS-II flight computer circuit](circuit.svg)
+
 **GY-87 → ESP32-CAM**
 
 | GY-87 pin | Connects to | Notes |
